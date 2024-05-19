@@ -10,6 +10,7 @@ class Answers extends CI_Controller
         $this->load->model('answer_model');
         $this->load->model('question_model');
         $this->load->helper('url');
+        $this->load->library('form_validation');
         $this->load->library('session');
     }
 

@@ -22,8 +22,7 @@ class Question_model extends CI_Model
 
     public function get_question_by_id($question_id)
     {
-        $this->db->where('id', $question_id);
-        $query = $this->db->get('questions');
+        $query = $this->db->get_where('questions', array('id' => $question_id));
         return $query->row_array();
     }
 

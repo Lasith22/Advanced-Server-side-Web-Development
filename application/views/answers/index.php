@@ -13,8 +13,12 @@
                 </span>
             </div>
             <div class="tags">
-                <button class="btn btn-info btn-sm">#Python</button>
-                <button class="btn btn-info btn-sm">#Algorithm</button>
+                <?php
+                $tags = explode(',', $question['tags']);
+                foreach ($tags as $tag) {
+                    echo '<button class="btn btn-info btn-sm">#' . trim($tag) . '</button>';
+                }
+                ?>
             </div>
         </div>
         <button type="button" class="btn btn-success mt-3" data-toggle="modal" data-target="#answerModal">

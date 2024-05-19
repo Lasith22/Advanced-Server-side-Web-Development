@@ -1,11 +1,10 @@
 <?php $this->load->view('templates/header'); ?>
 
-<div class="container mt-10">
-    <h2 class="mt-10">Questions</h2>
+<div class="container mt-5">
+    <h2 class="mt-5">Questions</h2>
     <button type="button" class="btn btn-primary custom-btn" data-toggle="modal" data-target="#askQuestionModal">
         Ask Question
     </button>
-
 </div>
 
 <!-- Modal -->
@@ -24,7 +23,11 @@
                         <label for="question">Type Your Question Here</label>
                         <textarea class="form-control" id="question" name="question" rows="3" required></textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <div class="form-group">
+                        <label for="tags">Tags</label>
+                        <input type="text" class="form-control" id="tags" name="tags" placeholder="Add tags (e.g. #php, #codeigniter)">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Post the Question</button>
                 </form>
             </div>
         </div>
@@ -48,7 +51,12 @@
                 </button>
             </div>
             <div class="tags">
-                <button class="btn btn-info btn-sm"> <?php echo $question['created_at']; ?></button>
+                <?php
+                $tags = explode(',', $question['tags']);
+                foreach ($tags as $tag) {
+                    echo '<button class="btn btn-info btn-sm">#' . trim($tag) . '</button>';
+                }
+                ?>
             </div>
         </div>
     </div>
@@ -56,6 +64,7 @@
 
 <?php $this->load->view('templates/footer'); ?>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script>
     $(document).ready(function() {
         $('.upvote').on('click', function() {
@@ -68,6 +77,9 @@
                     if (response.status == 'success') {
                         location.reload();
                     }
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
                 }
             });
         });
@@ -82,6 +94,9 @@
                     if (response.status == 'success') {
                         location.reload();
                     }
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
                 }
             });
         });
