@@ -4,28 +4,36 @@
     <div class="question-box">
         <h2><?php echo $question['question']; ?></h2>
         <div class="actions">
-            <button class="btn btn-outline-primary">
-                <i class="fa fa-thumbs-up"></i> 20
-            </button>
-            <button class="btn btn-outline-secondary">
-                <i class="fa fa-thumbs-down"></i> 10
-            </button>
-            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#answerModal">
-                Answer
-            </button>
+            <div class="vote-section">
+                <span class="vote-count">
+                    <i class="fa fa-thumbs-up"></i> <?php echo isset($question['upvotes']) ? $question['upvotes'] : 0; ?>
+                </span>
+                <span class="vote-count">
+                    <i class="fa fa-thumbs-down"></i> <?php echo isset($question['downvotes']) ? $question['downvotes'] : 0; ?>
+                </span>
+            </div>
+            <div class="tags">
+                <button class="btn btn-info btn-sm">#Python</button>
+                <button class="btn btn-info btn-sm">#Algorithm</button>
+            </div>
         </div>
+        <button type="button" class="btn btn-success mt-3" data-toggle="modal" data-target="#answerModal">
+            Answer
+        </button>
     </div>
 
     <?php foreach ($answers as $answer) : ?>
         <div class="answer-box">
             <p><?php echo $answer['answer']; ?></p>
             <div class="actions">
-                <button class="btn btn-outline-primary">
-                    <i class="fa fa-thumbs-up"></i> 10
-                </button>
-                <button class="btn btn-outline-secondary">
-                    <i class="fa fa-thumbs-down"></i> 10
-                </button>
+                <div class="vote-section">
+                    <button class="btn btn-outline-primary upvote-answer" data-id="<?php echo $answer['id']; ?>">
+                        <i class="fa fa-thumbs-up"></i> <?php echo isset($answer['upvotes']) ? $answer['upvotes'] : 0; ?>
+                    </button>
+                    <button class="btn btn-outline-secondary downvote-answer" data-id="<?php echo $answer['id']; ?>">
+                        <i class="fa fa-thumbs-down"></i> <?php echo isset($answer['downvotes']) ? $answer['downvotes'] : 0; ?>
+                    </button>
+                </div>
             </div>
         </div>
     <?php endforeach; ?>
@@ -56,3 +64,41 @@
 </div>
 
 <?php $this->load->view('templates/footer'); ?>
+
+<script>
+    $(document).ready(function() {
+        $('.upvote-answer').on('click', function() {
+            var answer_id = $(this).data('id');
+            $.ajax({
+                url: '<?php echo site_url('answers/upvote'); ?>/' + answer_id,
+                method: 'POST',
+                success: function(response) {
+                    response = JSON.parse(response);
+                    if (response.status == 'success') {
+                        location.reload();
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+
+        $('.downvote-answer').on('click', function() {
+            var answer_id = $(this).data('id');
+            $.ajax({
+                url: '<?php echo site_url('answers/downvote'); ?>/' + answer_id,
+                method: 'POST',
+                success: function(response) {
+                    response = JSON.parse(response);
+                    if (response.status == 'success') {
+                        location.reload();
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+    });
+</script>

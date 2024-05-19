@@ -1,19 +1,11 @@
 <?php $this->load->view('templates/header'); ?>
 
-<div class="header">
-    <nav>
-        <ul>
-            <li><a href="<?php echo site_url('home'); ?>">Home</a></li>
-            <li><a href="<?php echo site_url('about'); ?>">About</a></li>
-            <li><a href="<?php echo site_url('users/login'); ?>">Log Out</a></li>
-        </ul>
-    </nav>
-</div>
-
-<div class="container mt-5">
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#askQuestionModal">
+<div class="container mt-10">
+    <h2 class="mt-10">Questions</h2>
+    <button type="button" class="btn btn-primary custom-btn" data-toggle="modal" data-target="#askQuestionModal">
         Ask Question
     </button>
+
 </div>
 
 <!-- Modal -->
@@ -39,7 +31,7 @@
     </div>
 </div>
 
-<h2 class="mt-5">Questions</h2>
+
 
 <?php foreach ($questions as $question) : ?>
     <div class="question-box">
@@ -47,16 +39,17 @@
             <p><?php echo $question['question']; ?></p>
         </a>
         <div class="actions">
-            <button class="btn btn-outline-primary upvote" data-id="<?php echo $question['id']; ?>">
-                <i class="fa fa-thumbs-up"></i> <?php echo $question['upvotes']; ?>
-            </button>
-            <button class="btn btn-outline-secondary downvote" data-id="<?php echo $question['id']; ?>">
-                <i class="fa fa-thumbs-down"></i> <?php echo $question['downvotes']; ?>
-            </button>
-            <span class="tags">
-                <button class="btn btn-info btn-sm">#Python</button>
-                <button class="btn btn-info btn-sm">#Algorithm</button>
-            </span>
+            <div class="vote-section">
+                <button class="btn btn-outline-primary upvote" data-id="<?php echo $question['id']; ?>">
+                    <i class="fa fa-thumbs-up"></i> <?php echo $question['upvotes']; ?>
+                </button>
+                <button class="btn btn-outline-secondary downvote" data-id="<?php echo $question['id']; ?>">
+                    <i class="fa fa-thumbs-down"></i> <?php echo $question['downvotes']; ?>
+                </button>
+            </div>
+            <div class="tags">
+                <button class="btn btn-info btn-sm"> <?php echo $question['created_at']; ?></button>
+            </div>
         </div>
     </div>
 <?php endforeach; ?>

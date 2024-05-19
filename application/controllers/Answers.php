@@ -44,4 +44,24 @@ class Answers extends CI_Controller
         $this->answer_model->submit_answer($data);
         redirect('answers/index/' . $question_id);
     }
+
+    public function upvote($answer_id)
+    {
+        if (!$this->session->userdata('user_id')) {
+            redirect('users/login');
+        }
+
+        $this->answer_model->upvote_answer($answer_id);
+        echo json_encode(array('status' => 'success'));
+    }
+
+    public function downvote($answer_id)
+    {
+        if (!$this->session->userdata('user_id')) {
+            redirect('users/login');
+        }
+
+        $this->answer_model->downvote_answer($answer_id);
+        echo json_encode(array('status' => 'success'));
+    }
 }

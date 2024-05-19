@@ -20,4 +20,18 @@ class Answer_model extends CI_Model
         $query = $this->db->get('answers');
         return $query->result_array();
     }
+
+    public function upvote_answer($answer_id)
+    {
+        $this->db->set('upvotes', 'upvotes+1', FALSE);
+        $this->db->where('id', $answer_id);
+        $this->db->update('answers');
+    }
+
+    public function downvote_answer($answer_id)
+    {
+        $this->db->set('downvotes', 'downvotes+1', FALSE);
+        $this->db->where('id', $answer_id);
+        $this->db->update('answers');
+    }
 }
