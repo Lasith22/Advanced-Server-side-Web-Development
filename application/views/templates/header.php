@@ -53,6 +53,14 @@
         .container {
             margin-top: 80px;
 
+
+        }
+
+        .container2 {
+            display: flex;
+
+            gap: 3;
+
         }
 
         .question-box,

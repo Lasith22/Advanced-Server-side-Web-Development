@@ -1,77 +1,54 @@
 <?php $this->load->view('templates/header'); ?>
 
 <div class="container mt-5">
-    <div class="question-box">
-        <h2><?php echo $question['question']; ?></h2>
-        <div class="actions">
-            <div class="vote-section">
-                <span class="vote-count">
-                    <i class="fa fa-thumbs-up"></i> <?php echo isset($question['upvotes']) ? $question['upvotes'] : 0; ?>
-                </span>
-                <span class="vote-count">
-                    <i class="fa fa-thumbs-down"></i> <?php echo isset($question['downvotes']) ? $question['downvotes'] : 0; ?>
-                </span>
-            </div>
-            <div class="tags">
-                <?php
-                $tags = explode(',', $question['tags']);
-                foreach ($tags as $tag) {
-                    echo '<button class="btn btn-info btn-sm">#' . trim($tag) . '</button>';
-                }
-                ?>
-            </div>
-        </div>
-        <button type="button" class="btn btn-success mt-3" data-toggle="modal" data-target="#answerModal">
-            Answer
-        </button>
+    <h2 class="mt-5" style="font-weight: bold;"><?php echo $question['question']; ?></h2>
+    <div class="tags" style="margin-top: 10px;">
+        <?php
+        $tags = explode(',', $question['tags']);
+        foreach ($tags as $tag) {
+            echo '<span style="background-color: #2352D8; padding: 5px 10px; margin-right: 5px; border-radius: 5px; display: inline-block;  color: #fff">#' . trim($tag) . '</span>';
+        }
+        ?>
     </div>
 
-    <?php foreach ($answers as $answer) : ?>
-        <div class="answer-box">
-            <p><?php echo $answer['answer']; ?></p>
-            <div class="actions">
-                <div class="vote-section">
-                    <button class="btn btn-outline-primary upvote-answer" data-id="<?php echo $answer['id']; ?>">
-                        <i class="fa fa-thumbs-up"></i> <?php echo isset($answer['upvotes']) ? $answer['upvotes'] : 0; ?>
-                    </button>
-                    <button class="btn btn-outline-secondary downvote-answer" data-id="<?php echo $answer['id']; ?>">
-                        <i class="fa fa-thumbs-down"></i> <?php echo isset($answer['downvotes']) ? $answer['downvotes'] : 0; ?>
-                    </button>
-                </div>
-            </div>
-        </div>
-    <?php endforeach; ?>
-</div>
-
-<!-- Answer Modal -->
-<div class="modal fade" id="answerModal" tabindex="-1" role="dialog" aria-labelledby="answerModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="answerModalLabel">Answer</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form action="<?php echo site_url('answers/submit'); ?>" method="post">
-                    <input type="hidden" name="question_id" value="<?php echo $question['id']; ?>">
-                    <div class="form-group">
-                        <label for="answer">Type Your Answer Here</label>
-                        <textarea class="form-control" id="answer" name="answer" rows="3" required></textarea>
+    <div class="answers mt-4">
+        <h3>Answers</h3>
+        <?php if ($answers) : ?>
+            <?php foreach ($answers as $answer) : ?>
+                <div class="answer-box">
+                    <p><?php echo $answer['answer']; ?></p>
+                    <div class="vote-section">
+                        <button class="btn btn-outline-primary upvote" data-id="<?php echo $answer['id']; ?>">
+                            <i class="fa fa-thumbs-up"></i> <?php echo $answer['upvotes']; ?>
+                        </button>
+                        <button class="btn btn-outline-secondary downvote" data-id="<?php echo $answer['id']; ?>">
+                            <i class="fa fa-thumbs-down"></i> <?php echo $answer['downvotes']; ?>
+                        </button>
                     </div>
-                    <button type="submit" class="btn btn-primary">Post Answer</button>
-                </form>
+                </div>
+            <?php endforeach; ?>
+        <?php else : ?>
+            <p>No answers yet. Be the first to answer!</p>
+        <?php endif; ?>
+    </div>
+
+    <div class="submit-answer mt-4">
+        <h3>Submit Your Answer</h3>
+        <form action="<?php echo site_url('answers/submit/' . $question['id']); ?>" method="post">
+            <div class="form-group">
+                <textarea class="form-control" name="answer" rows="3" required></textarea>
             </div>
-        </div>
+            <button type="submit" class="btn " style="background-color: #3C6;">Post Answer</button>
+        </form>
     </div>
 </div>
 
 <?php $this->load->view('templates/footer'); ?>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script>
     $(document).ready(function() {
-        $('.upvote-answer').on('click', function() {
+        $('.upvote').on('click', function() {
             var answer_id = $(this).data('id');
             $.ajax({
                 url: '<?php echo site_url('answers/upvote'); ?>/' + answer_id,
@@ -88,7 +65,7 @@
             });
         });
 
-        $('.downvote-answer').on('click', function() {
+        $('.downvote').on('click', function() {
             var answer_id = $(this).data('id');
             $.ajax({
                 url: '<?php echo site_url('answers/downvote'); ?>/' + answer_id,

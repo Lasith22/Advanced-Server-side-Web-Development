@@ -3,7 +3,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Questions extends CI_Controller
 {
-
     public function __construct()
     {
         parent::__construct();
@@ -56,5 +55,14 @@ class Questions extends CI_Controller
     {
         $this->question_model->downvote_question($question_id);
         echo json_encode(array('status' => 'success'));
+    }
+
+    public function search()
+    {
+        $search_query = $this->input->get('query');
+        $questions = $this->question_model->search_questions($search_query);
+
+        header('Content-Type: application/json');
+        echo json_encode($questions);
     }
 }

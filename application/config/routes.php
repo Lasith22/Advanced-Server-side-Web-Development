@@ -34,3 +34,4 @@ $route['questions'] = 'questions/index';
 $route['questions/upvote/(:num)'] = 'questions/upvote/$1';
 $route['questions/downvote/(:num)'] = 'questions/downvote/$1';
 $route['answers/index/(:num)'] = 'answers/index/$1';
+$route['questions/search'] = 'questions/search';

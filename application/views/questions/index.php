@@ -2,9 +2,16 @@
 
 <div class="container mt-5">
     <h2 class="mt-5">Questions</h2>
-    <button type="button" class="btn btn-primary custom-btn" data-toggle="modal" data-target="#askQuestionModal">
-        Ask Question
-    </button>
+    <div class="container2">
+        <button type="button" class="btn btn-primary custom-btn" data-toggle="modal" data-target="#askQuestionModal">
+            Ask Question
+        </button>
+        <form id="searchForm" class="form-inline my-2 my-lg-0 mt-3 ml-3">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="searchQuery">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+    </div>
+
 </div>
 
 <!-- Modal -->
@@ -34,33 +41,33 @@
     </div>
 </div>
 
-
-
-<?php foreach ($questions as $question) : ?>
-    <div class="question-box">
-        <a href="<?php echo site_url('answers/index/' . $question['id']); ?>">
-            <p><?php echo $question['question']; ?></p>
-        </a>
-        <div class="actions">
-            <div class="vote-section">
-                <button class="btn btn-outline-primary upvote" data-id="<?php echo $question['id']; ?>">
-                    <i class="fa fa-thumbs-up"></i> <?php echo $question['upvotes']; ?>
-                </button>
-                <button class="btn btn-outline-secondary downvote" data-id="<?php echo $question['id']; ?>">
-                    <i class="fa fa-thumbs-down"></i> <?php echo $question['downvotes']; ?>
-                </button>
-            </div>
-            <div class="tags">
-                <?php
-                $tags = explode(',', $question['tags']);
-                foreach ($tags as $tag) {
-                    echo '<button class="btn btn-info btn-sm">#' . trim($tag) . '</button>';
-                }
-                ?>
+<div id="questionsList">
+    <?php foreach ($questions as $question) : ?>
+        <div class="question-box">
+            <a href="<?php echo site_url('answers/index/' . $question['id']); ?>">
+                <p><?php echo $question['question']; ?></p>
+            </a>
+            <div class="actions">
+                <div class="vote-section">
+                    <button class="btn btn-outline-primary upvote" data-id="<?php echo $question['id']; ?>">
+                        <i class="fa fa-thumbs-up"></i> <?php echo $question['upvotes']; ?>
+                    </button>
+                    <button class="btn btn-outline-secondary downvote" data-id="<?php echo $question['id']; ?>">
+                        <i class="fa fa-thumbs-down"></i> <?php echo $question['downvotes']; ?>
+                    </button>
+                </div>
+                <div class="tags">
+                    <?php
+                    $tags = explode(',', $question['tags']);
+                    foreach ($tags as $tag) {
+                        echo '<button class="btn btn-info btn-sm">#' . trim($tag) . '</button>';
+                    }
+                    ?>
+                </div>
             </div>
         </div>
-    </div>
-<?php endforeach; ?>
+    <?php endforeach; ?>
+</div>
 
 <?php $this->load->view('templates/footer'); ?>
 
@@ -97,6 +104,26 @@
                 },
                 error: function(xhr, status, error) {
                     console.error(xhr.responseText);
+                }
+            });
+        });
+
+        $('#searchForm').on('submit', function(event) {
+            event.preventDefault();
+            var query = $('#searchQuery').val();
+
+            $.ajax({
+                url: '<?php echo site_url('questions/search'); ?>',
+                method: 'GET',
+                data: {
+                    query: query
+                },
+                success: function(data) {
+                    var questionsList = $('#questionsList');
+                    questionsList.empty();
+                    data.forEach(function(question) {
+                        questionsList.append('<div class="question-box"><a href="<?php echo site_url('answers/index/'); ?>' + question.id + '"><p>' + question.question + '</p></a><div class="actions"><div class="vote-section"><button class="btn btn-outline-primary upvote" data-id="' + question.id + '"><i class="fa fa-thumbs-up"></i> ' + question.upvotes + '</button><button class="btn btn-outline-secondary downvote" data-id="' + question.id + '"><i class="fa fa-thumbs-down"></i> ' + question.downvotes + '</button></div><div class="tags">' + question.tags.split(',').map(tag => '<button class="btn btn-info btn-sm">#' + tag.trim() + '</button>').join('') + '</div></div></div>');
+                    });
                 }
             });
         });
